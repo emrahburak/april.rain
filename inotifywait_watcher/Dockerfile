@@ -3,7 +3,7 @@ FROM alpine:latest
 
 RUN apk add --no-cache inotify-tools curl bash
 
-ENV REMOTE_URL "http://localhost:5001/post"
+ENV REMOTE_URL ""
 ENV WATCHDIR "/var/watchdir"
 ENV DESTINATION  "/var/destination"
 

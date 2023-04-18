@@ -1,0 +1,23 @@
+version: '3.1'
+
+services:
+  s_file_watcher:
+    build:
+      context: ./inotifywait_watcher
+    container_name: c_inotify_wacther
+    environment:
+      - REMOTE_URL="s_publisher:5000/port"
+    volumes: 
+      - /tmp/watchdir:/var/watchdir
+      - /tmp/destination:/var/destination
+
+  s_publisher:
+    build:
+      context: ./rabbitmq_publisher
+    container_name: c_rabbitmq_publisher
+    environment:
+      - QUEUE='hello'
+      - HOST='amqp://localhost'
+
+
+

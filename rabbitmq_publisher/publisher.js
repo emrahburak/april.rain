@@ -24,13 +24,12 @@ fastify.get("/", async (request, reply) => {
   return { hello: "world" };
 });
 
-
-fastify.post("/post", async (request,reply) =>{
-  reply.type("application/json").code(201);
-  console.log(request.body)
-  return {success:"success"}
-
-})
+fastify.post("/post", async (request, reply) => {
+  reply
+    .code(201)
+    .header("Content-Type", "application/json; charset=utf-8")
+    .send({ status: 201 });
+});
 
 fastify.listen({ port: 5000 }, (err, address) => {
   if (err) throw err;
