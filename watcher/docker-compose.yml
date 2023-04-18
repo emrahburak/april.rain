@@ -1,0 +1,12 @@
+version: '3.1'
+
+services:
+  s_file_watcher:
+    build:
+      context: .
+    container_name: c_file_watcher
+    environment:
+      - REMOTE_URL="http://localhost:5000/port"
+    volumes: 
+      - /tmp/watchdir:/var/watchdir
+      - /tmp/destination:/var/destination
