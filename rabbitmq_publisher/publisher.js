@@ -3,21 +3,22 @@ const amqp = require("amqplib/callback_api");
 const fastify = require("fastify")({
   logger: true,
 });
-require("dotenv").config();
 
-const QUEUE = `${process.env.QUEUE}`;
-const HOST = `${process.env.HOST}`;
+//require("dotenv").config();
+const AMQP_QUEUE = `${process.env.QUEUE}`;
+const AMQP_HOST = `amqp://${process.env.HOST}`;
+// const HOST = `${process.env.HOST}`;
 
 // Create rabbitmq connection
-// let channel = null;
-// amqp.connect(HOST, function (err, conn) {
-//   if (!conn) {
-//     throw new Error(`AMQP connection not available on ${HOST}`);
-//   }
-//   conn.createChannel(function (err, ch) {
-//     channel = ch;
-//   });
-// });
+let channel = null;
+amqp.connect(AMQP_HOST, function (err, conn) {
+  if (!conn) {
+    throw new Error(`AMQP connection not available on ${HOST}`);
+  }
+  conn.createChannel(function (err, ch) {
+    channel = ch;
+  });
+});
 
 fastify.get("/", async (request, reply) => {
   reply.type("application/json").code(200);
@@ -25,13 +26,16 @@ fastify.get("/", async (request, reply) => {
 });
 
 fastify.post("/post", async (request, reply) => {
+
+  let {file_name} = request.body
+  channel.sendToQueue(AMQP_QUEUE, Buffer.from(JSON.stringify(file_name)));
   reply
     .code(201)
     .header("Content-Type", "application/json; charset=utf-8")
-    .send({ status: 201 });
+    .send({ status: 201, queueu:AMQP_QUEUE, host:AMQP_HOST });
 });
 
-fastify.listen({ port: 5000 }, (err, address) => {
+fastify.listen({ host: "0.0.0.0", port: 5000 }, (err, address) => {
   if (err) throw err;
 });
 

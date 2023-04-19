@@ -5,7 +5,10 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 
 #RUN npm ci --prod #for npm
+
+RUN apk add --no-cache bash
 RUN yarn install --production
+
 
 # Then we copy over the modules from above onto a `slim` image
 FROM mhart/alpine-node:slim-14

@@ -4,7 +4,7 @@
 
 # DESTINATION="/tmp/destination"
 # WATCHDIR="/tmp/watchdir"
-REMOTE_URL="http://localhost:5000/post"
+#REMOTE_URL="http://localhost:5000/post"
 
 echo ${WATCHDIR} "listening.." 
 
