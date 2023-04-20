@@ -23,7 +23,7 @@ amqp.connect(AMQP_HOST, function (err, conn) {
         console.log(" [x] Received %s", msg.content.toString());
       },
       {
-        noAck: true,
+        noAck: false,
       }
     );
   });

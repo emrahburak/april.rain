@@ -2,9 +2,9 @@
 
 
 # -----dev---
-DESTINATION="/tmp/destination"
-WATCHDIR="/tmp/watchdir"
-REMOTE_URL="http://localhost:5000/post"
+# DESTINATION="/tmp/destination"
+# WATCHDIR="/tmp/watchdir"
+# REMOTE_URL="http://localhost:5000/post"
 
 echo ${WATCHDIR} "listening.." 
 

@@ -6,7 +6,6 @@ COPY package.json yarn.lock ./
 
 #RUN npm ci --prod #for npm
 
-RUN apk add --no-cache bash
 RUN yarn install --production
 
 
@@ -19,6 +18,9 @@ RUN mkdir -p /var/destination
 
 ENV QUEUE  'hello'
 ENV HOST  'amqp://localhost'
+
+
+RUN apk add --no-cache bash
 
 EXPOSE 5000
 

@@ -7,12 +7,12 @@ const fastify = require("fastify")({
 
 // ----prod----
 //require("dotenv").config();
-// const AMQP_QUEUE = `${process.env.QUEUE}`;
-// const AMQP_HOST = `amqp://${process.env.HOST}`;
+const AMQP_QUEUE = `${process.env.QUEUE}`;
+const AMQP_HOST = `amqp://${process.env.HOST}`;
 
 // ----dev----
-const AMQP_QUEUE = 'hello';
-const AMQP_HOST =  'amqp://localhost';
+// const AMQP_QUEUE = 'hello';
+// const AMQP_HOST =  'amqp://localhost';
 
 
 // Create rabbitmq connection

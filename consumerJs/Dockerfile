@@ -6,7 +6,6 @@ COPY package.json yarn.lock ./
 
 #RUN npm ci --prod #for npm
 
-RUN apk add --no-cache bash
 RUN yarn install --production
 
 
@@ -16,6 +15,7 @@ FROM mhart/alpine-node:slim-14
 ENV QUEUE  'hello'
 ENV HOST  'amqp://localhost'
 
+RUN apk add --no-cache bash
 
 WORKDIR /app
 COPY --from=0 /app .
