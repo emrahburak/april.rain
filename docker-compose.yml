@@ -12,6 +12,20 @@ services:
       - n_backend
 
 
+  s_consumer:
+      build:
+        context: ./rabbitmq_consumer
+      container_name: c_rabbitmq_consumer
+      environment:
+        - QUEUE='hello'
+        - HOST=s_rabbitmq
+      networks:
+        - n_backend 
+      restart: on-failure
+      depends_on:
+        - s_rabbitmq
+
+
   s_publisher:
     build:
       context: ./rabbitmq_publisher
@@ -25,7 +39,7 @@ services:
       - n_backend
     restart: on-failure
     depends_on:
-      - s_rabbitmq
+      - s_consumer
 
   s_file_watcher:
     build:
@@ -43,21 +57,7 @@ services:
       - s_publisher
 
 
-  s_consumer:
-    build:
-      context: ./rabbitmq_consumer
-    container_name: c_rabbitmq_consumer
-    environment:
-      - QUEUE='hello'
-      - HOST=s_rabbitmq
-    networks:
-      - n_backend 
-    restart: on-failure
-    depends_on:
-      - s_rabbitmq
-
-    
-
+  
 
 networks:
   n_backend:

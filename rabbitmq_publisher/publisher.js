@@ -4,16 +4,22 @@ const fastify = require("fastify")({
   logger: true,
 });
 
+
+// ----prod----
 //require("dotenv").config();
-const AMQP_QUEUE = `${process.env.QUEUE}`;
-const AMQP_HOST = `amqp://${process.env.HOST}`;
-// const HOST = `${process.env.HOST}`;
+// const AMQP_QUEUE = `${process.env.QUEUE}`;
+// const AMQP_HOST = `amqp://${process.env.HOST}`;
+
+// ----dev----
+const AMQP_QUEUE = 'hello';
+const AMQP_HOST =  'amqp://localhost';
+
 
 // Create rabbitmq connection
 let channel = null;
 amqp.connect(AMQP_HOST, function (err, conn) {
   if (!conn) {
-    throw new Error(`AMQP connection not available on ${HOST}`);
+    throw new Error(`AMQP connection not available on ${AMQP_HOST}`);
   }
   conn.createChannel(function (err, ch) {
     channel = ch;
