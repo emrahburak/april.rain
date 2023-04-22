@@ -1,7 +1,12 @@
 const amqp = require("amqplib/callback_api");
 
-const AMQP_QUEUE = `${process.env.QUEUE}`;
-const AMQP_HOST = `amqp://${process.env.HOST}`;
+//prod
+// const AMQP_QUEUE = `${process.env.QUEUE}`;
+// const AMQP_HOST = `amqp://${process.env.HOST}`;
+
+//dev
+const AMQP_QUEUE = 'hello';
+const AMQP_HOST = 'amqp://localhost';
 
 amqp.connect(AMQP_HOST, function (err, conn) {
   if (!conn) {

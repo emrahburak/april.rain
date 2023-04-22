@@ -1,74 +1,75 @@
 version: '3.1'
 
 services:
-  # s_rabbitmq:
-  #   # hostname: my-rabbitmq
-  #   image: rabbitmq:3.11-management
-  #   container_name: c_rabbitmq_server
-  #   ports:
-  #     - 5672:5672
-  #     - 15672:15672
-  #   networks:
-  #     - n_backend
+  s_rabbitmq:
+    hostname: my-rabbitmq
+    image: rabbitmq:3.11-management
+    container_name: c_rabbitmq_server
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - n_backend
 
 
-  # s_consumer:
-  #     build:
-  #       context: ./consumerJs
-  #     container_name: c_rabbitmq_consumer
-  #     environment:
-  #       - HOST=s_rabbitmq
-  #       - QUEUE=hello
-  #     networks:
-  #       - n_backend 
-  #     restart: on-failure
-  #     depends_on:
-  #       - s_rabbitmq
+  s_consumer:
+      build:
+        context: ./rabbitmq_consumer
+      container_name: c_rabbitmq_consumer
+      environment:
+        - HOST=s_rabbitmq
+        - QUEUE=hello
+      networks:
+        - n_backend 
+      restart: on-failure
+      depends_on:
+        - s_rabbitmq
 
 
-  # s_publisher:
-  #   build:
-  #     context: ./rabbitmq_publisher
-  #   container_name: c_rabbitmq_publisher
-  #   environment:
-  #     - HOST=s_rabbitmq
-  #     - QUEUE=hello
-  #   ports:
-  #     - 5000:5000
-  #   networks:
-  #     - n_backend
-  #   restart: on-failure
-  #   depends_on:
-  #     - s_consumer
+  s_publisher:
+    build:
+      context: ./rabbitmq_publisher
+    container_name: c_rabbitmq_publisher
+    environment:
+      - HOST=s_rabbitmq
+      - QUEUE=hello
+    ports:
+      - 5000:5000
+    networks:
+      - n_backend
+    restart: on-failure
+    depends_on:
+      - s_consumer
 
   s_file_watcher:
     build:
       context: ./inotifywait_watcher
     container_name: c_inotify_wacther
     environment:
-      - REMOTE_URL=s_recognizer:5000/post
+      - REMOTE_URL=s_publisher:5000/post
     volumes: 
       - /tmp/watchdir:/var/watchdir
       - /tmp/destination:/var/destination
     networks:
       - n_backend
     restart: on-failure
-    # depends_on:
-    #   - s_publisher
+    depends_on:
+      - s_publisher
 
-  s_recognizer:
-      build:
-        context: ./rabbitmq_consumer
-      container_name: c_recognizer
-      networks:
-        - n_backend
-      restart: on-failure
-      depends_on:
-        - s_file_watcher
+  # s_recognizer:
+  #     build:
+  #       context: ./rabbitmq_consumer
+  #     container_name: c_recognizer
+  #     networks:
+  #       - n_backend
+  #     restart: on-failure
+  #     depends_on:
+  #       - s_file_watcher
 
   
 
 networks:
   n_backend:
+    driver: bridge
   
 

@@ -1,0 +1,12 @@
+version: '3.1'
+
+services:
+  s_rabbitmq_consumer:
+    build:
+      context: .
+    container_name: c_rabbitmq_consumer
+    environment:
+      - HOST=localhost
+      - QUEUE=hello
+    # ports:
+    #   - 5000:5000
