@@ -1,92 +1,18 @@
-import sys, random,os,re, queue, time, shutil, socket, json, asyncio, threading
+import sys, random,os,re, queue, time, shutil, json, threading
 import dataset
-import threading
 import speech_recognition as sr
 from pydub import AudioSegment
 from pydub.silence import split_on_silence
 from collections import deque
-from flask import Flask, request, jsonify
-import event_emitter as events
-
-
-class Singleton:
-    _instance = None
-    _lock = threading.Lock()
-
-    def __new__(cls):
-        if not cls._instance:  # This is the only difference
-            with cls._lock:
-                if not cls._instance:
-                    cls._instance = super().__new__(cls)
-        return cls._instance
-
-
-class SingletonClass(object):
-    def __new__(cls):
-        if not hasattr(cls, 'instance'):
-            cls.instance = super(SingletonClass, cls).__new__(cls)
-        return cls.instance
-
-
-class TestQueue(Singleton):
-    def __init__(self):
-        self.queue = queue.Queue()
-        self._lock = threading.Lock()
-        self._em = events.EventEmitter()
-        self._em.on('hello',self.process_of_queue)
-       
-    def to_queue(self, file):
-        self.queue.put(file)
-
-    def trigger(self):
-        self.process_of_queue()
-
-    def get_items(self):
-        my_list = list(self.queue.queue)
-        return my_list
-
-    def emit(self):
-        self._em.emit('hello',name="ebg")
-
-    def process_of_queue(self,name):
-        self._lock.acquire()
-
-        if not self.queue.empty():
-            item = self.queue.get()
-
-        self._lock.release()
-
-        with dataset.connect(f'sqlite:///test.db') as db:
-            db_entry = str(item)
-            title =  db_entry + "-" + str(random.random() * 100)
-            db['updates'].insert(
-                dict(title=title.capitalize(), text=db_entry))
-
-    pass
 
 
 
-test_queue = TestQueue()
 
-def socket_listener():
-    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind(('http://localhost', 5000))
-    server_socket.listen()
 
-    print('Socket dinleme başlatıldı.')
 
-    while True:
-        # Socket bağlantılarını kabul et
-        client_socket, address = server_socket.accept()
-        print(f"{address} ile bağlantı kuruldu.")
 
-        # Gelen veriyi al
-        data = client_socket.recv(1024).decode('utf-8')
-        # Alınan veriyi JSON formatına dönüştür
-        json_data = json.loads(data)
 
-        # JSON verisini kullan
-        print(f"Gelen veri: {json_data}")
+
 
 
 

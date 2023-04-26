@@ -11,6 +11,7 @@ echo ${WATCHDIR} "listening.."
 while read file; do
     mv -i "$file" $DESTINATION
     #json_file_list=$(echo "${file_list[@]}" | jq -R . | jq -s .)
+    echo ${file} | awk -F'/' '{print $2}'
     curl -X POST -H "Content-Type: application/json" -d '{"file_name": "'"$file"'"}' $REMOTE_URL
     echo
 done < <(inotifywait -rmq --format '%w%f' -e create $WATCHDIR)
