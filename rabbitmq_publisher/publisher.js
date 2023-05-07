@@ -38,7 +38,7 @@ fastify.post("/post", async (request, reply) => {
   reply
     .code(201)
     .header("Content-Type", "application/json; charset=utf-8")
-    .send({ status: 201, queueu:AMQP_QUEUE, host:AMQP_HOST });
+    .send({ status: 201, queueu:AMQP_QUEUE, host:AMQP_HOST, data:file_name });
 });
 
 fastify.listen({ host: "0.0.0.0", port: 5000 }, (err, address) => {

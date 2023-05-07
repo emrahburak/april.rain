@@ -19,6 +19,9 @@ services:
       environment:
         - HOST=s_rabbitmq
         - QUEUE=hello
+      volumes: 
+        - /tmp/watchdir:/var/watchdir
+        - /tmp/destination:/var/destination
       networks:
         - n_backend 
       restart: on-failure

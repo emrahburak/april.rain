@@ -12,7 +12,7 @@ while read file; do
     mv -i "$file" $DESTINATION
     #json_file_list=$(echo "${file_list[@]}" | jq -R . | jq -s .)
     NEWFILE=${DESTINATION}"/"$(echo ${file} | awk -F'/' '{print $NF}')
-    curl -X POST -H "Content-Type: application/json" -d '{"file_name": "'"$NEWFILE"'"}' $REMOTE_URL
+    curl -X POST -H "Content-Type: application/json" -d '{"file_name": "'$NEWFILE'"}' $REMOTE_URL
     echo
 done < <(inotifywait -rmq --format '%w%f' -e create $WATCHDIR)
 
