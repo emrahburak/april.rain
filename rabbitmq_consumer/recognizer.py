@@ -1,4 +1,4 @@
-import os
+import os,shutil
 import time
 import logging
 import speech_recognition as sr
@@ -31,6 +31,10 @@ class TestQueue(SingletonClass):
     def to_queue(self, file):
         if file.endswith('mp3') and os.path.isfile(file):
             self.file = os.path.abspath(file)
+
+
+    def cleanup_chunk(self):
+        os.system(command)("cd ${CHUNK} && rm -r *")
 
     def process_of_queue(self):
         # self._lock.acquire()
@@ -70,11 +74,11 @@ class TestQueue(SingletonClass):
                     # print(chunk_filename, ":", sefl.text)
                     whole_text += text
                     time.sleep(0.5)
+
+                finally:
+                    os.remove(chunk_filename)
         
 
-        for chunk_file in CHUNK:
-            del_file = os.path.abspath(chunk_file)
-            os.remove(del_file)
 
         return whole_text
 
