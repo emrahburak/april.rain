@@ -1,5 +1,5 @@
 {
-  "name": "consumerjs",
+  "name": "",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -12,6 +12,6 @@
   "dependencies": {
     "amqplib": "^0.10.3",
     "dotenv": "^16.0.3",
-    "mongoose": "^7.1.0"
+    "mongoose": "^7.1.1"
   }
 }

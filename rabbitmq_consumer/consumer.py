@@ -10,6 +10,7 @@ from recognizer import TestQueue
 # prod
 HOST = os.environ["HOST"]
 QUEUE = os.environ["QUEUE"]
+QUEUE_2 = os.environ["QUEUE_2"]
 
 # dev
 # HOST = 'localhost'
@@ -21,6 +22,7 @@ QUEUE = os.environ["QUEUE"]
 
 logging.basicConfig(level=logging.INFO)
 conn = Connection('amqp://guest:guest@{}:5672//'.format(HOST))
+simple_queue = conn.SimpleQueue(QUEUE_2)
 queue = Queue('{}'.format(QUEUE))
 
 test_queue = TestQueue()
@@ -28,8 +30,9 @@ test_queue = TestQueue()
 
 class C(ConsumerMixin):
 
-    def __init__(self, connection):
+    def __init__(self, connection,pub_simple_queue):
         self.connection = connection
+        self.simple_queue = pub_simple_queue
 
     def get_consumers(self, Consumer, channel):
         print("listening..")
@@ -44,15 +47,17 @@ class C(ConsumerMixin):
         logging.info('Processing...')
         recocnized_text = test_queue.process_of_queue()
 
-        # t = Thread(target=test_queue.process_of_queue)
-        # t.start()
-        # t.join()
         message.ack()
-        logging.info('RECOGNIZED: \n {}'.format(recocnized_text))
         logging.info('MESSAGE ACKED')
 
 
+        # send message to another queue for database
+        self.simple_queue.put(recocnized_text)
+
+
+
+
 if __name__ == '__main__':
-    consume = C(conn).run()
+    consume = C(conn,simple_queue).run()
 
 
