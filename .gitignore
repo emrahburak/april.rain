@@ -329,6 +329,7 @@ pip-selfcheck.json
 */.env
 */.**
 
+./app_docs
 
 # End of https://www.toptal.com/developers/gitignore/api/python,node,venv,
 
