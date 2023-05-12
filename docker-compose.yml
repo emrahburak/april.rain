@@ -20,9 +20,11 @@ services:
         - HOST=s_rabbitmq
         - QUEUE=hello
         - QUEUE_2=hello2
+        - DB_NAME=recognized.db
       volumes: 
         - /tmp/watchdir:/var/watchdir
         - /tmp/destination:/var/destination
+        - ./app_docs/data/sqlite:/var/data
       networks:
         - n_backend 
       restart: on-failure
@@ -60,18 +62,21 @@ services:
     depends_on:
       - s_publisher
 
+networks:
+  n_backend:
+    driver: bridge
 
-  s_mongo:
-    image: mongo
-    container_name: c_mongo_server
-    restart: always
-    environment:
-     MONGO_INITDB_ROOT_USERNAME: root
-     MONGO_INITDB_ROOT_PASSWORD: hello
-    volumes:
-      - april_rain_db:/data/db
-    networks:
-      - n_backend
+  # s_mongo:
+  #   image: mongo
+  #   container_name: c_mongo_server
+  #   restart: always
+  #   environment:
+  #    MONGO_INITDB_ROOT_USERNAME: root
+  #    MONGO_INITDB_ROOT_PASSWORD: hello
+  #   volumes:
+  #     - april_rain_db:/data/db
+  #   networks:
+  #     - n_backend
 
   # s_mongo_client:
   #   build:
@@ -89,26 +94,23 @@ services:
   #     - s_rabbitmq
 
 
-  s_mongo-express:
-    image: mongo-express
-    container_name: c_mongo_express
-    ports:
-      - 8081:8081
-    environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: hello
-      ME_CONFIG_MONGODB_URL: mongodb://root:hello@s_mongo:27017/
-    networks:
-      - n_backend
-    restart: always
-    depends_on:
-      - s_mongo
+  # s_mongo-express:
+  #   image: mongo-express
+  #   container_name: c_mongo_express
+  #   ports:
+  #     - 8081:8081
+  #   environment:
+  #     ME_CONFIG_MONGODB_ADMINUSERNAME: root
+  #     ME_CONFIG_MONGODB_ADMINPASSWORD: hello
+  #     ME_CONFIG_MONGODB_URL: mongodb://root:hello@s_mongo:27017/
+  #   networks:
+  #     - n_backend
+  #   restart: always
+  #   depends_on:
+  #     - s_mongo
 
 
-networks:
-  n_backend:
-    driver: bridge
   
-volumes:
-  april_rain_db:
+# volumes:
+#   april_rain_db:
 

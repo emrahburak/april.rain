@@ -2,15 +2,18 @@ from __future__ import annotations
 
 import os
 import logging
+import dataset
 from threading import Thread
 from kombu import Connection, Queue, Consumer
 from kombu.mixins import ConsumerMixin
 from recognizer import TestQueue
 
+
 # prod
 HOST = os.environ["HOST"]
 QUEUE = os.environ["QUEUE"]
 QUEUE_2 = os.environ["QUEUE_2"]
+DB_NAME = os.environ["DB_NAME"]
 
 # dev
 # HOST = 'localhost'
@@ -30,9 +33,9 @@ test_queue = TestQueue()
 
 class C(ConsumerMixin):
 
-    def __init__(self, connection,pub_simple_queue):
+    def __init__(self, connection):
         self.connection = connection
-        self.simple_queue = pub_simple_queue
+        # self.simple_queue = pub_simple_queue
 
     def get_consumers(self, Consumer, channel):
         print("listening..")
@@ -46,6 +49,8 @@ class C(ConsumerMixin):
         test_queue.to_queue(body)
         logging.info('Processing...')
         recocnized_text = test_queue.process_of_queue()
+        with dataset.connect('sqlite:///\/var/data/'+DB_NAME) as db:
+            db['updates'].insert(dict(text=recocnized_text))
 
         message.ack()
         logging.info('MESSAGE ACKED')
@@ -58,6 +63,6 @@ class C(ConsumerMixin):
 
 
 if __name__ == '__main__':
-    consume = C(conn,simple_queue).run()
+    consume = C(conn).run()
 
 

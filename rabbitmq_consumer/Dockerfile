@@ -9,6 +9,7 @@ COPY requirements.txt ./
 RUN mkdir -p /var/watchdir
 RUN mkdir -p /var/destination
 RUN mkdir -p /var/chunk
+RUN mkdir -p /var/data
 
 RUN apt-get update && apt-get install -y ffmpeg 
 
