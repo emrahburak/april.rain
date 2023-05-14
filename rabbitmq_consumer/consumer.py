@@ -33,9 +33,9 @@ test_queue = TestQueue()
 
 class C(ConsumerMixin):
 
-    def __init__(self, connection):
+    def __init__(self, connection, pub_simple_queue):
         self.connection = connection
-        # self.simple_queue = pub_simple_queue
+        self.simple_queue = pub_simple_queue
 
     def get_consumers(self, Consumer, channel):
         print("listening..")
@@ -49,8 +49,8 @@ class C(ConsumerMixin):
         test_queue.to_queue(body)
         logging.info('Processing...')
         recocnized_text = test_queue.process_of_queue()
-        with dataset.connect('sqlite:///\/var/data/'+DB_NAME) as db:
-            db['updates'].insert(dict(text=recocnized_text))
+        # with dataset.connect('sqlite:///\/var/data/'+DB_NAME) as db:
+        #     db['updates'].insert(dict(text=recocnized_text))
 
         message.ack()
         logging.info('MESSAGE ACKED')
@@ -63,6 +63,6 @@ class C(ConsumerMixin):
 
 
 if __name__ == '__main__':
-    consume = C(conn).run()
+    consume = C(conn, simple_queue).run()
 
 

@@ -1,24 +1,20 @@
-# This stage installs our modules
-FROM mhart/alpine-node:16
-
-WORKDIR /app
-COPY package.json yarn.lock ./
-
-#RUN npm ci --prod #for npm
-
-RUN yarn install --production
+ FROM pypy:3.9-bullseye
+# FROM python:3.9-alpine
 
 
-# Then we copy over the modules from above onto a `slim` image
-FROM mhart/alpine-node:slim-16
+WORKDIR /usr/src/app
 
-# ENV QUEUE  'hello'
-# ENV HOST  'amqp://localhost'
+COPY requirements.txt ./
 
-RUN apk add --no-cache bash
+RUN mkdir -p /var/data
 
-WORKDIR /app
-COPY --from=0 /app .
+# RUN apt-get update && apt-get install -y ffmpeg 
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+
 COPY . .
 
-CMD ["node", "sqlite_client.js"]
+# EXPOSE 5000
+
+ CMD [ "pypy", "./main.py" ]
